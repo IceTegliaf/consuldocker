@@ -6,7 +6,8 @@ FROM ubuntu:16.04
 #adduser -S -G consul consul
 
 # Set up certificates, our base tools, and Consul.
-RUN apt-get update && apt-get install -y wget unzip iproute2
+RUN apt-get update && apt-get install -y wget unzip
+
 RUN wget https://releases.hashicorp.com/consul/0.7.5/consul_0.7.5_linux_amd64.zip
 RUN unzip consul_0.7.5_linux_amd64.zip -d /bin
     
@@ -46,5 +47,23 @@ COPY config/ /consul/config/
 # everything in RAM, exposes a web UI and HTTP endpoints, and bootstraps itself.
 # Don't use this configuration for production.
 #CMD ["agent", "-dev", "-client", "0.0.0.0"]
-CMD ["consul", "agent", "-config-dir=/consul/config", "-data-dir=/consul/data"]
+
+
+#CMD "consul agent -ui -config-dir=/consul/config -data-dir=/consul/data"
+
+
+
+#RUN wget https://releases.hashicorp.com/consul/0.7.5/consul_0.7.5_web_ui.zip
+#RUN unzip consul_0.7.5_web_ui.zip -d /consul/ui
+#RUN rm -rf ./consul_0.7.5_web_ui.zip
+
+WORKDIR /consul
+
+
+
+
+COPY zapuska.sh ./
+RUN chmod +x zapuska.sh 
+
+ENTRYPOINT /consul/zapuska.sh
 
